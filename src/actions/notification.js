@@ -1,6 +1,6 @@
 import {SET_NOTIFICATIONS} from '../constants/types';
 
-export function setNotification(message) {
+export function setNotifications(message) {
 	return {
 		type: SET_NOTIFICATIONS,
 		message

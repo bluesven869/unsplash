@@ -11,14 +11,15 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
+	TouchableOpacity,
+	Dimensions
 } from 'react-native';
 
 import {SearchBar} from 'react-native-elements';
-
 import {unsplash} from '../constants/unsplash';
-
 import User from '../components/user';
+
+const fullHeight = Dimensions.get('window').height;
 
 const UsersScreen = ({navigation}) => {
   const [keyword, setKeyword] = useState('');
@@ -87,7 +88,7 @@ const UsersScreen = ({navigation}) => {
         />
         <Text style={styles.searchResult}> Total: {totalUsers} Users</Text>
       </View>
-      <View>
+      <View style={styles.list}>
         <FlatList
           data={users.users}
           keyExtractor={(item) => item.id}
@@ -128,7 +129,10 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#d1d1d1',
     height: 1,
-  },
+	},
+	list: {
+		height: fullHeight - 190,
+	}
 });
 
 export default UsersScreen;

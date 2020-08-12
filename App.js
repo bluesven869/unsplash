@@ -7,6 +7,7 @@ import store from './src/store/configureStore.js';
 
 import UsersScreen from './src/pages/users';
 import UserProfileScreen from './src/pages/user-profile';
+import UserPhotoScreen from './src/pages/user-photos';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,13 @@ const App: () => React$Node = () => {
             component={UserProfileScreen}
             options={({route}) => ({
               title: `${route.params.user.first_name} ${route.params.user.last_name}`,
+            })}
+          />
+          <Stack.Screen
+            name="UserPhoto"
+            component={UserPhotoScreen}
+            options={({route}) => ({
+              title: `${route.params.user.first_name} ${route.params.user.last_name}'s photos`,
             })}
           />
         </Stack.Navigator>

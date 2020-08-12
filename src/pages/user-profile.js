@@ -58,6 +58,7 @@ const UserProfileScreen = ({route, navigation}) => {
   }, []);
 
   useEffect(() => {
+    // dispatch(setPhotos([]));
     setPage(1);
     searchPhotos(user.username, page, 20);
   }, [user]);
@@ -66,9 +67,16 @@ const UserProfileScreen = ({route, navigation}) => {
     searchPhotos(user.username, page, 20);
   }, [page]);
 
-  const handlePhotoClick = useCallback((photo) => {
-    console.log(photo);
-  }, []);
+  const handlePhotoClick = useCallback(
+    (photo) => {
+			const photoIndex = photos.photos.findIndex((x) => x.id === photo.id);
+      navigation.navigate('UserPhoto', {
+        user,
+        photoIndex,
+      });
+    },
+    [user, photos],
+  );
 
   return (
     <View>
@@ -117,7 +125,13 @@ const UserProfileScreen = ({route, navigation}) => {
           ItemSeparatorComponent={() => <View style={styles.line} />}
         />
       </View>
-      {loading && <ActivityIndicator style={styles.loading} size="large" />}
+      {loading && (
+        <ActivityIndicator
+          color="#0000FF"
+          style={styles.loading}
+          size="large"
+        />
+      )}
     </View>
   );
 };
@@ -166,6 +180,7 @@ const styles = StyleSheet.create({
   },
 
   bioText: {
+    maxHeight: 50,
     width: fullWidth - 190,
     flexWrap: 'wrap',
     flexDirection: 'column',
@@ -181,6 +196,7 @@ const styles = StyleSheet.create({
   loading: {
     position: 'absolute',
     top: '50%',
+    left: '50%',
   },
 });
 export default UserProfileScreen;
