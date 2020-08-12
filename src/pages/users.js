@@ -106,6 +106,9 @@ const UsersScreen = ({navigation}) => {
           onEndReachedThreshold={0.5}
           ItemSeparatorComponent={() => <View style={styles.line} />}
         />
+        {users.users.length === 0 && (
+          <Text style={styles.noUsers}>No users found.</Text>
+        )}
       </View>
     </KeyboardAvoidingView>
   );
@@ -132,7 +135,15 @@ const styles = StyleSheet.create({
 	},
 	list: {
 		height: fullHeight - 190,
-	}
+  },
+  noUsers: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontSize: 20,
+  }
 });
 
 export default UsersScreen;

@@ -124,6 +124,9 @@ const UserProfileScreen = ({route, navigation}) => {
           onEndReachedThreshold={0.5}
           ItemSeparatorComponent={() => <View style={styles.line} />}
         />
+        {photos.photos.length === 0 && (
+          <Text style={styles.noPhotos}>No Photos found.</Text>
+        )}
       </View>
       {loading && (
         <ActivityIndicator
@@ -198,5 +201,13 @@ const styles = StyleSheet.create({
     top: '50%',
     left: '50%',
   },
+  noPhotos: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontSize: 20,
+  }
 });
 export default UserProfileScreen;
