@@ -23,7 +23,9 @@ const App: () => React$Node = () => {
           <Stack.Screen
             name="UserProfile"
             component={UserProfileScreen}
-            options={{title: 'User Profile'}}
+            options={({route}) => ({
+              title: `${route.params.user.first_name} ${route.params.user.last_name}`,
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>

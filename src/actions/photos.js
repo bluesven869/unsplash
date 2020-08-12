@@ -1,22 +1,15 @@
-import {SEARCH_PHOTOS} from '../constants/types';
+import {SET_PHOTOS, APPEND_PHOTOS} from '../constants/types';
 
-export function fetchPhotosRequest() {
-  return {
-    type: SEARCH_PHOTOS.FETCH_REQUEST,
-  };
-}
-
-export function fetchPhotosSuccess(photos) {
+export function setPhotos(photos) {
 	return {
-		type: SEARCH_PHOTOS.FETCH_SUCCESS,
+		type: SET_PHOTOS,
 		photos
   };
 }
 
-export function fetchPhotosError(error) {
+export function appendPhotos(photos) {
 	return {
-		type: SEARCH_PHOTOS.FETCH_ERROR,
-		error,
+		type: APPEND_PHOTOS,
+		photos
 	}
 }
-

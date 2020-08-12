@@ -11,7 +11,7 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 
 import {SearchBar} from 'react-native-elements';
@@ -42,7 +42,7 @@ const UsersScreen = ({navigation}) => {
             throw res.error;
           }
           setTotalPage(res.total_pages);
-          setTotalUsers(res.total);
+					setTotalUsers(res.total);
           if (page === 1) {
             dispatch(setUsers(res.results));
           } else {
@@ -67,8 +67,13 @@ const UsersScreen = ({navigation}) => {
     searchUsers(keyword, page, 20);
   }, [page]);
 
+	// useEffect(()=> {
+	// 	console.log(users.users);
+	// }, [users]);
 	const handleUserClick = useCallback((user)=>{
-		console.log(user);
+		navigation.navigate('UserProfile', {
+			user
+		});
 	}, []);
 
   return (
@@ -87,12 +92,16 @@ const UsersScreen = ({navigation}) => {
           data={users.users}
           keyExtractor={(item) => item.id}
           renderItem={({item, index}) => (
-            <TouchableWithoutFeedback
-              onPress={() => this.handleUserClick(item)}>
+            <TouchableOpacity
+              onPress={() => handleUserClick(item)}>
               <User user={item} />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           )}
-          onEndReached={() => setPage(page + 1)}
+          onEndReached={() => {
+						if (page < totalPage) {
+							setPage(page + 1)
+						}
+					}}
           onEndReachedThreshold={0.5}
           ItemSeparatorComponent={() => <View style={styles.line} />}
         />
