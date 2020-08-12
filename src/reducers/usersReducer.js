@@ -1,4 +1,4 @@
-import {SEARCH_USERS} from '../constants/types';
+import {SET_USERS, APPEND_USERS} from '../constants/types';
 
 const initialState = {
   users: [],
@@ -6,30 +6,19 @@ const initialState = {
 
 const usersReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SEARCH_USERS.FETCH_REQUEST:
+    case SET_USERS:
       return {
         ...state,
-        pending: true,
+        users: action.users,
       };
-    case SEARCH_USERS.FETCH_SUCCESS:
-      return {
-				...state,
-				users: action.payload,
-				pending: false,
-      };
-    case SEARCH_USERS.FETCH_ERROR:
+    case APPEND_USERS:
       return {
         ...state,
-				pending: false,
-				error: action.error
+        users: [...state.users, ...action.users],
       };
-
     default:
       return state;
   }
 };
 
 export default usersReducer;
-export const getUsers = state => state.users;
-export const getUsersPending = state => state.pending;
-export const getUsersError = state => state.error;

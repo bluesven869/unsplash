@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 import store from './src/store/configureStore.js';
 
 import UsersScreen from './src/pages/users';
-import UsersProfileScreen from './src/pages/user-profile';
+import UserProfileScreen from './src/pages/user-profile';
 
 const Stack = createStackNavigator();
 

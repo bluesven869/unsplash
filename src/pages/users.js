@@ -1,42 +1,125 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import fetchUsers from '../api/fetchUsers';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {setUsers, appendUsers} from '../actions/users';
+import {setNotifications} from '../actions/notification';
+import debounce from 'lodash.debounce';
 import {
-  getUsersError,
-  getUsers,
-  getUsersPending,
-} from '../reducers/usersReducer';
-import {ActivityIndicator, View, Text} from 'react-native';
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
-const UsersScreen = ({navigation, fetchUsers, users}) => {
-  const [userHint, setUserHint] = setState('');
-  const [page, setPage] = setState(1);
+import {SearchBar} from 'react-native-elements';
+
+import {unsplash} from '../constants/unsplash';
+
+import User from '../components/user';
+
+const UsersScreen = ({navigation}) => {
+  const [keyword, setKeyword] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const users = useSelector((state) => state.users);
+  const notification = useSelector((state) => state.notification);
+  const dispatch = useDispatch();
+
+  const searchUsers = useMemo(() => {
+    return debounce((searchWord, page, per_page) => {
+      setLoading(true);
+      unsplash.search
+        .users(searchWord, page, per_page)
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.error) {
+            throw res.error;
+          }
+          setTotalPage(res.total_pages);
+          setTotalUsers(res.total);
+          if (page === 1) {
+            dispatch(setUsers(res.results));
+          } else {
+            dispatch(appendUsers(res.results));
+          }
+        })
+        .catch((error) => {
+          dispatch(setNotifications(error.message));
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 500);
+  }, []);
 
   useEffect(() => {
-    fetchUsers(userHint, page, 20);
-  }, [userHint]);
+    setPage(1);
+    searchUsers(keyword, page, 20);
+  }, [keyword]);
 
   useEffect(() => {
-    console.log(users);
-  }, [users]);
+    searchUsers(keyword, page, 20);
+  }, [page]);
+
+	const handleUserClick = useCallback((user)=>{
+		console.log(user);
+	}, []);
 
   return (
-    <View>
-      <Text>User Search</Text>
-    </View>
+    <KeyboardAvoidingView style={styles.container}>
+      <View style={styles.searchBox}>
+        <SearchBar
+          placeholder="Type Here..."
+          onChangeText={(text) => setKeyword(text)}
+          value={keyword}
+          showLoading={loading}
+        />
+        <Text style={styles.searchResult}> Total: {totalUsers} Users</Text>
+      </View>
+      <View>
+        <FlatList
+          data={users.users}
+          keyExtractor={(item) => item.id}
+          renderItem={({item, index}) => (
+            <TouchableWithoutFeedback
+              onPress={() => this.handleUserClick(item)}>
+              <User user={item} />
+            </TouchableWithoutFeedback>
+          )}
+          onEndReached={() => setPage(page + 1)}
+          onEndReachedThreshold={0.5}
+          ItemSeparatorComponent={() => <View style={styles.line} />}
+        />
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
-const mapStateToProps = (state) => ({
-  error: getUsersError(state),
-  users: getUsers(state),
-  pending: getUsersPending(state),
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  searchBox: {
+    height: 100,
+    backgroundColor: '#2b2f33',
+  },
+  searchResult: {
+    paddingTop: 8,
+    paddingRight: 8,
+    color: 'white',
+    textAlign: 'right',
+  },
+  line: {
+    borderWidth: 0.5,
+    borderColor: '#d1d1d1',
+    height: 1,
+  },
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({
-    fetchUsers,
-  });
-
-export default connect(mapStateToProps, mapDispatchToProps)(UsersScreen);
+export default UsersScreen;

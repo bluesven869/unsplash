@@ -1,22 +1,15 @@
-import {SEARCH_USERS} from '../constants/types';
+import {SET_USERS, APPEND_USERS} from '../constants/types';
 
-export function fetchUsersRequest() {
-  return {
-    type: SEARCH_USERS.FETCH_REQUEST,
-  };
-}
-
-export function fetchUsersSuccess(users) {
+export function setUsers(users) {
 	return {
-		type: SEARCH_USERS.FETCH_SUCCESS,
+		type: SET_USERS,
 		users
   };
 }
 
-export function fetchUsersError(error) {
+export function appendUsers(users) {
 	return {
-		type: SEARCH_USERS.FETCH_ERROR,
-		error,
+		type: APPEND_USERS,
+		users
 	}
 }
-
