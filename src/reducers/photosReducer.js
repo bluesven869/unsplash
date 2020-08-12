@@ -12,7 +12,7 @@ const photosReducer = (state = initialState, action) => {
     case SEARCH_PHOTOS.FETCH_SUCCESS:
       return {
 				...state,
-				photos: action.payload
+				photos: action.payload,
 				pending: false,
       };
     case SEARCH_PHOTOS.FETCH_ERROR:

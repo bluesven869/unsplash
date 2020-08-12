@@ -14,7 +14,7 @@ const usersReducer = (state = initialState, action) => {
     case SEARCH_USERS.FETCH_SUCCESS:
       return {
 				...state,
-				users: action.payload
+				users: action.payload,
 				pending: false,
       };
     case SEARCH_USERS.FETCH_ERROR:
